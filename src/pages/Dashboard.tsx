@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save } from 'lucide-react'
+import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save, Building2 } from 'lucide-react'
 import Footer from '../components/Footer'
 import { usePortfolioStore } from '@/store/portfolioStore'
 import { createClient } from '@/lib/supabase'
@@ -107,7 +107,7 @@ export default function Dashboard() {
     })
 
     // Modal State
-    const [modalType, setModalType] = useState<'experience' | 'education' | 'skills' | null>(null)
+    const [modalType, setModalType] = useState<'experience' | 'education' | 'skills' | 'projects' | null>(null)
     const [modalData, setModalData] = useState<any>({})
 
     // Deployment Action States
@@ -717,6 +717,20 @@ export default App`)
                     proficiency: proficiencyMap[level] || 'intermediate',
                     display_order: 0
                 })
+            } else if (modalType === 'projects') {
+                await usePortfolioStore.getState().addProject({
+                    title: modalData.title,
+                    tagline: modalData.tagline,
+                    description: modalData.description || '',
+                    tech_stack: modalData.tech_stack ? modalData.tech_stack.split(',').map((s: string) => s.trim()) : [],
+                    github_url: modalData.github_url || '',
+                    live_url: modalData.live_url || '',
+                    case_study_url: '',
+                    images: [],
+                    thumbnail: '',
+                    is_featured: false,
+                    display_order: projects.length
+                })
             }
             setToast({ message: 'Item added successfully!', type: 'success' })
             setModalType(null)
@@ -751,7 +765,8 @@ export default App`)
     const tabs = [
         { id: 'overview', label: 'Portfolios', icon: Layout },
         { id: 'profile', label: 'Profile', icon: UserCircle },
-        { id: 'experience', label: 'Experience', icon: Briefcase },
+        { id: 'projects', label: 'Work', icon: Briefcase },
+        { id: 'experience', label: 'Experience', icon: Building2 },
         { id: 'education', label: 'Education', icon: GraduationCap },
         { id: 'skills', label: 'Skills', icon: CodeIcon },
         { id: 'templates', label: 'Themes', icon: Paintbrush },
@@ -806,6 +821,58 @@ export default App`)
                                     </div>
                                 ))}
                                 {projects.length === 0 && <SampleCard icon={Layout} title="Sample Site" subtitle="devforge-js.vercel.app/demo" />}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'projects' && (
+                        <div className="space-y-6 text-left">
+                            <div className="flex justify-between items-center">
+                                <h1 className="text-xl font-bold uppercase tracking-tighter text-white">Your Projects</h1>
+                                <button onClick={() => setModalType('projects')} className="bg-forge-beige text-forge-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-white transition-all shadow-lg flex items-center gap-2">
+                                    <Plus className="w-4 h-4" /> Add Project
+                                </button>
+                            </div>
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                {projects.map(p => (
+                                    <div key={p.id} className="p-6 border border-forge-muted/20 bg-forge-grey/20 rounded-[32px] hover:bg-forge-grey/40 group transition-all">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className="w-12 h-12 bg-forge-black rounded-2xl flex items-center justify-center border border-forge-muted/10 group-hover:border-forge-beige transition-all">
+                                                <Briefcase className="w-6 h-6 text-forge-muted group-hover:text-forge-beige" />
+                                            </div>
+                                            <button
+                                                onClick={() => usePortfolioStore.getState().deleteProject(p.id)}
+                                                className="p-2 text-forge-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                        <h3 className="font-bold text-lg text-white mb-1">{p.title}</h3>
+                                        <p className="text-sm text-forge-muted line-clamp-2 mb-4">{p.tagline}</p>
+                                        <div className="flex gap-3 pt-4 border-t border-forge-muted/10">
+                                            {p.github_url && (
+                                                <a href={p.github_url} target="_blank" className="text-[10px] font-black uppercase tracking-widest text-forge-beige hover:text-white flex items-center gap-1.5 transition-colors">
+                                                    <Github className="w-3.5 h-3.5" /> Source
+                                                </a>
+                                            )}
+                                            {p.live_url && (
+                                                <a href={p.live_url} target="_blank" className="text-[10px] font-black uppercase tracking-widest text-forge-beige hover:text-white flex items-center gap-1.5 transition-colors">
+                                                    <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                                {projects.length === 0 && (
+                                    <div className="col-span-full py-20 border-2 border-dashed border-forge-muted/10 rounded-[40px] flex flex-col items-center justify-center text-center px-6">
+                                        <div className="w-16 h-16 bg-forge-grey/50 rounded-full flex items-center justify-center mb-4">
+                                            <Briefcase className="w-8 h-8 text-forge-muted" />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-white mb-2">No projects yet</h3>
+                                        <p className="text-sm text-forge-muted max-w-xs mb-8">Showcase your best work by adding your favorite projects here.</p>
+                                        <button onClick={() => setModalType('projects')} className="bg-white/5 border border-white/10 hover:border-white/20 text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-[0.2em] transition-all">Add Your First Project</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -1258,6 +1325,30 @@ export default App`)
                                     <span>Adv</span>
                                     <span>Exp</span>
                                 </div>
+                            </div>
+                        </>
+                    )}
+                    {modalType === 'projects' && (
+                        <>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest">Project Title</label>
+                                <input placeholder="e.g. E-commerce App" value={modalData.title || ''} onChange={e => setModalData({ ...modalData, title: e.target.value })} className="w-full p-3 bg-forge-grey border border-transparent focus:border-forge-muted focus:bg-forge-black outline-none text-sm font-bold text-white rounded-2xl transition-all" />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest">Short Tagline</label>
+                                <input placeholder="e.g. Modern shopping experience" value={modalData.tagline || ''} onChange={e => setModalData({ ...modalData, tagline: e.target.value })} className="w-full p-3 bg-forge-grey border border-transparent focus:border-forge-muted focus:bg-forge-black outline-none text-sm font-bold text-white rounded-2xl transition-all" />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest">GitHub URL</label>
+                                <input placeholder="github.com/username/repo" value={modalData.github_url || ''} onChange={e => setModalData({ ...modalData, github_url: e.target.value })} className="w-full p-3 bg-forge-grey border border-transparent focus:border-forge-muted focus:bg-forge-black outline-none text-sm font-bold text-white rounded-2xl transition-all" />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest">Live Demo URL</label>
+                                <input placeholder="your-project.vercel.app" value={modalData.live_url || ''} onChange={e => setModalData({ ...modalData, live_url: e.target.value })} className="w-full p-3 bg-forge-grey border border-transparent focus:border-forge-muted focus:bg-forge-black outline-none text-sm font-bold text-white rounded-2xl transition-all" />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest">Tech Stack (comma separated)</label>
+                                <input placeholder="React, Tailwind, Supabase" value={modalData.tech_stack || ''} onChange={e => setModalData({ ...modalData, tech_stack: e.target.value })} className="w-full p-3 bg-forge-grey border border-transparent focus:border-forge-muted focus:bg-forge-black outline-none text-sm font-bold text-white rounded-2xl transition-all" />
                             </div>
                         </>
                     )}
