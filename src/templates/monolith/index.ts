@@ -1,0 +1,1 @@
+export { MonolithTemplate } from './MonolithTemplate'
