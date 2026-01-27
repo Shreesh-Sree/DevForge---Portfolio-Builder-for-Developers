@@ -73,4 +73,4 @@ A command-line inspired interface for those who want to showcase their skills wi
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-Built with ❤️ by [Shreesh](https://github.com/Shreesh-Sree) using DevForge.
+Built with ❤️ DevForge.
