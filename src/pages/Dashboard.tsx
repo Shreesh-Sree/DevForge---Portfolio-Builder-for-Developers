@@ -101,7 +101,7 @@ export default function Dashboard() {
     const [socials, setSocials] = useState({
         github: '',
         linkedin: '',
-        instagram: '',
+        twitter: '', // Used for Instagram
         website: '',
         email: ''
     })
@@ -157,7 +157,7 @@ export default function Dashboard() {
             setSocials({
                 github: socialLinks.github || '',
                 linkedin: socialLinks.linkedin || '',
-                instagram: socialLinks.instagram || '',
+                twitter: socialLinks.twitter || '',
                 website: socialLinks.website || '',
                 email: socialLinks.email || ''
             })
@@ -1126,7 +1126,7 @@ export default App`)
                                         {[
                                             { id: 'github', label: 'GitHub', icon: Github, placeholder: 'github.com/username' },
                                             { id: 'linkedin', label: 'LinkedIn', icon: Linkedin, placeholder: 'linkedin.com/in/username' },
-                                            { id: 'instagram', label: 'Instagram', icon: Instagram, placeholder: 'instagram.com/username' },
+                                            { id: 'twitter', label: 'Instagram', icon: Instagram, placeholder: 'instagram.com/username' },
                                             { id: 'website', label: 'Website', icon: Globe, placeholder: 'yourdomain.com' },
                                             { id: 'email', label: 'Public Email', icon: Mail, placeholder: 'your@email.com' },
                                         ].map((social) => (

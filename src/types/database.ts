@@ -23,7 +23,7 @@ export interface SocialLinks {
     github: string
     linkedin: string
     twitter: string
-    instagram: string
+    instagram?: string
     website: string
     email: string
     dribbble: string

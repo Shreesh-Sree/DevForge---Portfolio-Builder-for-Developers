@@ -127,6 +127,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
         if (!profile) return
 
         const supabase = createClient()
+        console.log('Updating social links with:', updates)
 
         if (socialLinks) {
             // Update existing
@@ -135,7 +136,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
                 .update(updates)
                 .eq('user_id', profile.id)
 
-            if (!error) {
+            if (error) {
+                console.error('Supabase updateSocialLinks Error:', error)
+            } else {
                 set({ socialLinks: { ...socialLinks, ...updates } })
             }
         } else {
@@ -146,7 +149,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
                 .select()
                 .single()
 
-            if (!error && data) {
+            if (error) {
+                console.error('Supabase createSocialLinks Error:', error)
+            } else if (data) {
                 set({ socialLinks: data })
             }
         }

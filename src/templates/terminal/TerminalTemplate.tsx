@@ -218,11 +218,11 @@ export function TerminalTemplate({ data }: TemplateProps) {
                                     </a>
                                 </div>
                             )}
-                            {social_links?.instagram && (
+                            {social_links?.twitter && (
                                 <div className="flex items-center gap-4">
                                     <span className="text-gray-500">INSTAGRAM:</span>
-                                    <a href={social_links.instagram} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                                        {social_links.instagram}
+                                    <a href={social_links.twitter} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+                                        {social_links.twitter}
                                     </a>
                                 </div>
                             )}

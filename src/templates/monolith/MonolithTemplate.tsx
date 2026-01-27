@@ -61,8 +61,8 @@ export function MonolithTemplate({ data }: TemplateProps) {
                         <Linkedin className="w-4 h-4 group-hover:scale-110 transition-transform" />
                     </a>
                 )}
-                {social_links?.instagram && (
-                    <a href={social_links.instagram} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all group shadow-xl">
+                {social_links?.twitter && (
+                    <a href={social_links.twitter} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all group shadow-xl">
                         <Instagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
                     </a>
                 )}
@@ -333,8 +333,8 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                         <Linkedin className="w-5 h-5 text-neutral-400 group-hover:text-white transition-colors" />
                                     </a>
                                 )}
-                                {social_links?.instagram && (
-                                    <a href={social_links.instagram} className="p-7 rounded-full border border-white/10 bg-white/5 hover:border-[var(--accent)] hover:bg-white/[0.08] transition-all shadow-xl group">
+                                {social_links?.twitter && (
+                                    <a href={social_links.twitter} className="p-7 rounded-full border border-white/10 bg-white/5 hover:border-[var(--accent)] hover:bg-white/[0.08] transition-all shadow-xl group">
                                         <Instagram className="w-5 h-5 text-neutral-400 group-hover:text-white transition-colors" />
                                     </a>
                                 )}
