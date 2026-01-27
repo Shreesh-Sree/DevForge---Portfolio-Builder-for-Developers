@@ -85,7 +85,7 @@ export default function Landing() {
                             { id: 'terminal', name: 'Terminal', tag: 'Hacker' },
                             { id: 'monolith', name: 'Monolith', tag: 'Editorial' }
                         ].map(t => (
-                            <Link key={t.id} to={`/ preview / ${t.id} `} className="group bg-forge-black p-12 transition-all hover:bg-forge-grey flex flex-col justify-between aspect-square md:aspect-auto">
+                            <Link key={t.id} to={`/preview/${t.id}`} className="group bg-forge-black p-12 transition-all hover:bg-forge-grey flex flex-col justify-between aspect-square md:aspect-auto">
                                 <div>
                                     <div className="text-[10px] font-black uppercase tracking-widest text-forge-muted mb-4">{t.tag}</div>
                                     <h3 className="text-5xl font-black uppercase tracking-tighter text-white group-hover:translate-x-2 transition-transform">{t.name}</h3>
