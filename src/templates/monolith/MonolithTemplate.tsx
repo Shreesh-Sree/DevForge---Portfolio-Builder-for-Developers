@@ -125,7 +125,7 @@ export function MonolithTemplate({ data }: TemplateProps) {
                             >
                                 <a
                                     href="#contact"
-                                    className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 rounded-full font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                                    className="relative w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 rounded-full font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
                                     style={{ backgroundColor: 'var(--accent)', color: accentColor === '#FFFFFF' ? '#000000' : '#FFFFFF' }}
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-3">

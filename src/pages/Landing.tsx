@@ -75,23 +75,43 @@ export default function Landing() {
                 </section>
 
                 {/* Focused Templates Section */}
-                <section id="templates" className="mb-20">
-                    <div className="flex justify-between items-end mb-8 md:mb-12">
-                        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white">Styles</h2>
-                        <p className="text-[10px] md:text-sm font-bold text-forge-muted uppercase tracking-widest">Base Templates</p>
+                <section id="templates" className="mb-32">
+                    <div className="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Styles</h2>
+                            <p className="text-[10px] md:text-sm font-bold text-forge-muted uppercase tracking-[0.2em] mt-2">Curated themes for modern developers</p>
+                        </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-forge-grey border border-forge-grey overflow-hidden rounded-3xl shadow-2xl shadow-forge-black">
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                         {[
-                            { id: 'terminal', name: 'Terminal', tag: 'Hacker' },
-                            { id: 'monolith', name: 'Monolith', tag: 'Editorial' }
+                            { id: 'terminal', name: 'Terminal', tag: 'Hacker', desc: 'A command-line inspired interface for the minimalists.' },
+                            { id: 'monolith', name: 'Monolith', tag: 'Editorial', desc: 'Bold typography and immersive layouts for the storytellers.' }
                         ].map(t => (
-                            <Link key={t.id} to={`/preview/${t.id}`} className="group bg-forge-black p-8 md:p-12 transition-all hover:bg-forge-grey flex flex-col justify-between aspect-square">
-                                <div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-forge-muted mb-4">{t.tag}</div>
-                                    <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white group-hover:translate-x-2 transition-transform">{t.name}</h3>
+                            <Link
+                                key={t.id}
+                                to={`/preview/${t.id}`}
+                                className="group relative flex flex-col bg-forge-grey/20 border border-white/5 rounded-[48px] overflow-hidden transition-all duration-500 hover:border-forge-beige/30 hover:shadow-2xl hover:shadow-forge-beige/5"
+                            >
+                                <div className="p-10 pb-6">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-forge-muted">{t.tag}</div>
+                                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-forge-beige group-hover:text-forge-black transition-all">
+                                            <ArrowRight className="w-5 h-5 -rotate-45 group-hover:rotate-0 transition-transform" />
+                                        </div>
+                                    </div>
+                                    <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4">{t.name}</h3>
+                                    <p className="text-sm text-forge-muted font-medium max-w-[240px] leading-relaxed italic">{t.desc}</p>
                                 </div>
-                                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-forge-beige opacity-0 md:group-hover:opacity-100 transition-all">
-                                    Launch Preview <ArrowRight className="w-4 h-4" />
+
+                                <div className="relative aspect-[16/10] mx-6 mb-6 rounded-[32px] overflow-hidden bg-black/40 border border-white/5 group-hover:border-white/10 transition-colors">
+                                    <div className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500 group-hover:opacity-0 bg-black/40" />
+                                    <iframe
+                                        src={`/preview/${t.id}`}
+                                        className="absolute top-0 left-0 w-[400%] h-[400%] border-none origin-top-left pointer-events-none"
+                                        style={{ transform: 'scale(0.25)' }}
+                                        title={`${t.name} Preview`}
+                                    />
                                 </div>
                             </Link>
                         ))}

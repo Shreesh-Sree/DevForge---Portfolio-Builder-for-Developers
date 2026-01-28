@@ -1020,12 +1020,56 @@ export default App`)
                     )}
 
                     {activeTab === 'templates' && (
-                        <div className="space-y-8 text-left">
-                            <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Themes</h1>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {['Terminal', 'Monolith'].map(t => (
-                                    <div key={t} onClick={() => updateProfile({ template_id: t.toLowerCase() as 'terminal' | 'monolith' })} className={`p-8 border rounded-[32px] cursor-pointer transition-all ${profile?.template_id?.toLowerCase() === t.toLowerCase() ? 'bg-forge-beige text-forge-black shadow-lg shadow-black/20' : 'border-forge-muted/20 bg-forge-grey/20 text-white hover:bg-forge-grey/40'}`}>
-                                        <p className="text-sm font-black uppercase tracking-widest">{t}</p>
+                        <div className="space-y-10 text-left">
+                            <div className="flex justify-between items-end">
+                                <div>
+                                    <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Styles</h1>
+                                    <p className="text-[10px] font-black uppercase text-forge-muted tracking-[0.2em] mt-1">Base Templates</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                                {[
+                                    { id: 'terminal', name: 'Terminal', category: 'Hacker' },
+                                    { id: 'monolith', name: 'Monolith', category: 'Editorial' }
+                                ].map(t => (
+                                    <div
+                                        key={t.id}
+                                        onClick={() => updateProfile({ template_id: t.id as 'terminal' | 'monolith' })}
+                                        className={`group relative flex flex-col border transition-all duration-500 overflow-hidden cursor-pointer rounded-[40px] ${profile?.template_id?.toLowerCase() === t.id ? 'border-forge-beige/50 bg-forge-black shadow-2xl shadow-forge-beige/5 ring-1 ring-forge-beige/20' : 'border-white/5 bg-forge-grey/20 opacity-80 hover:opacity-100 hover:border-white/10'}`}
+                                    >
+                                        <div className="p-8 pb-4 flex justify-between items-start">
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-forge-muted mb-2">{t.category}</p>
+                                                <h3 className="text-3xl font-black uppercase tracking-tighter text-white group-hover:text-forge-beige transition-colors">{t.name}</h3>
+                                            </div>
+                                            {profile?.template_id?.toLowerCase() === t.id && (
+                                                <div className="px-3 py-1 bg-forge-beige text-forge-black text-[9px] font-black uppercase tracking-widest rounded-full">Active</div>
+                                            )}
+                                        </div>
+
+                                        {/* Preview Iframe Container */}
+                                        <div className="relative aspect-[16/10] mx-4 mb-4 rounded-3xl overflow-hidden bg-black/40 border border-white/5 group-hover:border-white/10 transition-colors">
+                                            <div className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500 group-hover:opacity-0 bg-black/20" />
+                                            <iframe
+                                                src={`/preview/${t.id}`}
+                                                className="absolute top-0 left-0 w-[400%] h-[400%] border-none origin-top-left pointer-events-none"
+                                                style={{ transform: 'scale(0.25)' }}
+                                                title={`${t.name} Preview`}
+                                            />
+                                        </div>
+
+                                        <div className="p-8 pt-0 mt-auto flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <a
+                                                href={`/preview/${t.id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="text-[10px] font-black uppercase tracking-[0.2em] text-forge-muted hover:text-forge-beige flex items-center gap-2 group/link"
+                                            >
+                                                Launch Preview <ExternalLink className="w-3 h-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                                            </a>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
