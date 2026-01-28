@@ -41,7 +41,7 @@ DevForge is a high-performance, open-source portfolio builder designed specifica
 2. **Install dependencies**:
 
    ```bash
-   npm install
+   npm install  .
    ```
 
 3. **Set up Environment Variables**:
