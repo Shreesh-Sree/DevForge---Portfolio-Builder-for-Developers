@@ -110,7 +110,7 @@ export interface ContactMessage {
 }
 
 // Enums
-export type TemplateId = 'terminal' | 'monolith'
+export type TemplateId = 'terminal' | 'monolith' | 'light-modern'
 
 export type SkillCategory = 'frontend' | 'backend' | 'devops' | 'tools' | 'languages' | 'other'
 

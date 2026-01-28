@@ -86,7 +86,8 @@ export default function Landing() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                         {[
                             { id: 'terminal', name: 'Terminal', tag: 'Hacker', desc: 'A command-line inspired interface for the minimalists.' },
-                            { id: 'monolith', name: 'Monolith', tag: 'Editorial', desc: 'Bold typography and immersive layouts for the storytellers.' }
+                            { id: 'monolith', name: 'Monolith', tag: 'Editorial', desc: 'Bold typography and immersive layouts for the storytellers.' },
+                            { id: 'light-modern', name: 'Light Modern', tag: 'Professional', desc: 'Clean, crisp, and high-performance design for the pros.' }
                         ].map(t => (
                             <Link
                                 key={t.id}

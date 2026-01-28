@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import { TerminalTemplate } from '../templates/terminal/TerminalTemplate'
 import { MonolithTemplate } from '../templates/monolith/MonolithTemplate'
+import { LightModernTemplate } from '../templates/light-modern/LightModernTemplate'
 import type { PortfolioData, TemplateId } from '../types'
 import { usePortfolioStore } from '../store/portfolioStore'
 import { createClient } from '@/lib/supabase'
@@ -13,6 +14,7 @@ import { Loader2 } from 'lucide-react'
 const templateComponents: Record<TemplateId, React.ComponentType<{ data: PortfolioData }>> = {
     terminal: TerminalTemplate,
     monolith: MonolithTemplate,
+    'light-modern': LightModernTemplate,
 }
 
 // Sample data for preview (fallback)

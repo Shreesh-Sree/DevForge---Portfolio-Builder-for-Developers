@@ -39,8 +39,20 @@ export const templates: TemplateConfig[] = [
             accent: '#FFFFFF',
         },
     },
-
+    {
+        id: 'light-modern',
+        name: 'Light Modern',
+        description: 'Clean, professional light mode design',
+        preview: '/templates/light-modern.png', // Placeholder, user might need to generate this later
+        colors: {
+            background: '#F8FAFC',
+            foreground: '#0F172A',
+            accent: '#2563EB',
+        },
+    },
 ]
+
+
 
 export function getTemplate(id: string): TemplateConfig | undefined {
     return templates.find(t => t.id === id)

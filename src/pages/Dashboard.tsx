@@ -10,6 +10,7 @@ import JSZip from 'jszip'
 // Raw imports for ZIP generation
 import monolithRaw from '../templates/monolith/MonolithTemplate.tsx?raw'
 import terminalRaw from '../templates/terminal/TerminalTemplate.tsx?raw'
+import lightModernRaw from '../templates/light-modern/LightModernTemplate.tsx?raw'
 import templateIndexRaw from '../templates/index.ts?raw'
 import utilsRaw from '../lib/utils.ts?raw'
 
@@ -349,6 +350,16 @@ import data from './data.json'
 
 function App() {
   return <TerminalTemplate data={data as any} />
+}
+
+export default App`)
+            } else if (templateId === 'light-modern') {
+                zip.file('src/templates/light-modern/LightModernTemplate.tsx', lightModernRaw)
+                zip.file('src/App.tsx', `import { LightModernTemplate } from './templates/light-modern/LightModernTemplate'
+import data from './data.json'
+
+function App() {
+  return <LightModernTemplate data={data as any} />
 }
 
 export default App`)
@@ -862,7 +873,6 @@ export default App`)
                                 <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Your Sites</h1>
                                 <div className="flex gap-2">
                                     <a href={`/preview/${profile?.template_id || 'monolith'}`} target="_blank" className="text-[10px] md:text-[11px] font-black uppercase tracking-widest bg-forge-grey border border-forge-muted/30 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-forge-muted/20 transition-colors">Preview</a>
-                                    <button className="text-[10px] md:text-[11px] font-black uppercase tracking-widest bg-forge-beige text-forge-black px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-white transition-colors">Build New</button>
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1032,7 +1042,8 @@ export default App`)
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                                 {[
                                     { id: 'terminal', name: 'Terminal', category: 'Hacker' },
-                                    { id: 'monolith', name: 'Monolith', category: 'Editorial' }
+                                    { id: 'monolith', name: 'Monolith', category: 'Editorial' },
+                                    { id: 'light-modern', name: 'Light Modern', category: 'Professional' }
                                 ].map(t => (
                                     <div
                                         key={t.id}
@@ -1245,7 +1256,7 @@ export default App`)
                                         ].map((p) => (
                                             <button
                                                 key={p.id}
-                                                onClick={() => setDeployPlatform(p.id as any)}
+                                                onClick={() => setDeployPlatform(p.id as 'vercel' | 'netlify' | 'github')}
                                                 className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${deployPlatform === p.id ? 'bg-forge-beige text-forge-black shadow-lg' : 'text-forge-muted hover:text-white'}`}
                                             >
                                                 {p.label}
