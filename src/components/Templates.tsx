@@ -1,6 +1,6 @@
 import { Github, Instagram, Mail, ExternalLink } from 'lucide-react'
 
-export function TerminalTemplate({ profile }: { profile: any }) {
+export function TerminalTemplate({ profile }: { profile: { full_name?: string, about?: string, location?: string, username?: string } }) {
     return (
         <div className="min-h-screen bg-black text-green-500 font-mono p-4 md:p-10 selection:bg-green-500 selection:text-black">
             <div className="max-w-3xl mx-auto border border-green-900/50 p-6 md:p-10 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
@@ -62,7 +62,7 @@ export function TerminalTemplate({ profile }: { profile: any }) {
     )
 }
 
-export function MonolithTemplate({ profile }: { profile: any }) {
+export function MonolithTemplate({ profile }: { profile: { full_name?: string, about?: string, location?: string, username?: string } }) {
     return (
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
             <header className="fixed top-0 w-full flex justify-between items-center px-10 py-8 z-50">

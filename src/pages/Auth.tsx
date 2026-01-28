@@ -15,6 +15,7 @@ export default function Auth() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [message, setMessage] = useState<string | null>(null)
+    const [devBypass, setDevBypass] = useState(localStorage.getItem('dev_auth_bypass') === 'true')
     const navigate = useNavigate()
 
     async function handleEmailAuth(e: React.FormEvent) {
@@ -64,13 +65,25 @@ export default function Auth() {
         }
     }
 
+    function handleDevBypass() {
+        const newState = !devBypass
+        setDevBypass(newState)
+        if (newState) {
+            localStorage.setItem('dev_auth_bypass', 'true')
+            navigate('/dashboard')
+            window.location.reload() // Force reload to trigger App.tsx update
+        } else {
+            localStorage.removeItem('dev_auth_bypass')
+        }
+    }
+
     return (
         <div className="min-h-screen bg-forge-black text-forge-beige font-sans flex flex-col selection:bg-forge-muted selection:text-white">
             <div className="flex-1 flex items-center justify-center p-6">
-                <div className="w-full max-w-sm space-y-10 py-20">
+                <div className="w-full max-w-sm space-y-8 md:space-y-10 py-12 md:py-20">
                     <header>
-                        <Link to="/" className="text-[10px] font-black text-forge-muted hover:text-white uppercase tracking-widest mb-8 block transition-colors">← Back Home</Link>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter leading-tight text-white">
+                        <Link to="/" className="text-[10px] font-black text-forge-muted hover:text-white uppercase tracking-widest mb-6 md:mb-8 block transition-colors">← Back Home</Link>
+                        <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight text-white">
                             {isSignup ? "Join the\nForge" : "Welcome\nBack"}
                         </h1>
                     </header>
@@ -120,14 +133,14 @@ export default function Auth() {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-4 bg-forge-beige text-forge-black text-xs font-black uppercase tracking-widest rounded-full hover:bg-white disabled:opacity-50 transition-all shadow-lg shadow-black/20"
+                                    className="w-full py-4 md:py-5 bg-forge-beige text-forge-black text-[11px] md:text-xs font-black uppercase tracking-widest rounded-full hover:bg-white disabled:opacity-50 transition-all shadow-lg shadow-black/20"
                                 >
                                     {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isSignup ? 'Create Account' : 'Sign In')}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleGithubLogin}
-                                    className="w-full py-4 border border-forge-muted/30 text-forge-beige text-xs font-black uppercase tracking-widest rounded-full hover:bg-forge-grey transition-all"
+                                    className="w-full py-4 md:py-5 border border-forge-muted/30 text-forge-beige text-[11px] md:text-xs font-black uppercase tracking-widest rounded-full hover:bg-forge-grey transition-all"
                                 >
                                     Login with GitHub
                                 </button>
@@ -147,6 +160,19 @@ export default function Auth() {
                 </div>
             </div>
             <Footer />
+            {import.meta.env.DEV && (
+                <div className="fixed top-6 right-6 z-[100]">
+                    <button
+                        onClick={handleDevBypass}
+                        className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-xl backdrop-blur-md border ${devBypass
+                            ? 'bg-forge-beige text-forge-black border-forge-beige'
+                            : 'bg-black/40 text-forge-muted border-forge-muted/20 hover:border-forge-muted'
+                            }`}
+                    >
+                        {devBypass ? 'Bypass Active' : 'Dev Auth Bypass'}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

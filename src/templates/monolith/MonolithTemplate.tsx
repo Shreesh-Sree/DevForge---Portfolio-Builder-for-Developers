@@ -29,18 +29,18 @@ export function MonolithTemplate({ data }: TemplateProps) {
     ].filter(item => item.show !== false)
 
     return (
-        <div className="min-h-screen bg-[#030303] text-white selection:bg-[var(--accent)] selection:text-black font-sans antialiased overflow-x-hidden" style={{ '--accent': accentColor } as any}>
+        <div className="min-h-screen bg-[#030303] text-white selection:bg-[var(--accent)] selection:text-black font-sans antialiased overflow-x-hidden" style={{ '--accent': accentColor } as React.CSSProperties}>
             {/* Top Navigation - Minimalist Glass */}
-            <div className="fixed top-0 inset-x-0 z-50 flex justify-center p-6">
-                <nav className="bg-black/20 backdrop-blur-md border border-white/5 px-8 py-3 rounded-full flex items-center gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent)] mr-2 whitespace-nowrap hidden sm:block">{profile.name}</span>
-                    <div className="w-px h-3 bg-white/10 hidden sm:block" />
-                    <div className="flex items-center gap-6">
+            <div className="fixed top-0 inset-x-0 z-50 flex justify-center p-4 md:p-6">
+                <nav className="bg-black/20 backdrop-blur-md border border-white/5 px-6 md:px-8 py-2.5 md:py-3 rounded-full flex items-center gap-4 md:gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)] max-w-[95vw] overflow-x-auto no-scrollbar">
+                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-[var(--accent)] mr-2 whitespace-nowrap hidden lg:block">{profile.name}</span>
+                    <div className="w-px h-3 bg-white/10 hidden lg:block" />
+                    <div className="flex items-center gap-4 md:gap-6">
                         {navItems.map((item) => (
                             <a
                                 key={item.id}
                                 href={`#${item.id}`}
-                                className="text-[9px] font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-all whitespace-nowrap"
+                                className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-all whitespace-nowrap"
                             >
                                 {item.label}
                             </a>
@@ -76,39 +76,39 @@ export function MonolithTemplate({ data }: TemplateProps) {
             {/* Main Content */}
             <main className="relative">
                 {/* Hero Section */}
-                <section id="about" className="min-h-screen flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+                <section id="about" className="min-h-screen flex flex-col items-center justify-center p-6 md:p-8 text-center relative overflow-hidden">
                     {/* Atmospheric Glow */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vh] bg-gradient-to-tr from-[var(--accent)]/5 via-transparent to-[var(--accent)]/5 blur-[120px] pointer-events-none" />
-                    <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] bg-[var(--accent)]/10 blur-[150px] rounded-full animate-pulse pointer-events-none" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vh] bg-gradient-to-tr from-[var(--accent)]/5 via-transparent to-[var(--accent)]/5 blur-[120px] pointer-events-none" />
+                    <div className="absolute top-1/4 left-1/4 w-[60vw] h-[60vw] bg-[var(--accent)]/10 blur-[150px] rounded-full animate-pulse pointer-events-none" />
 
                     <motion.div
-                        className="mb-10 px-6 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm text-[10px] font-black uppercase tracking-[0.4em] text-neutral-400 shadow-inner"
+                        className="mb-8 md:mb-10 px-4 md:px-6 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] text-neutral-400 shadow-inner"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent)] mr-3 animate-pulse" />
+                        <span className="inline-block w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[var(--accent)] mr-2 md:mr-3 animate-pulse" />
                         Available for select projects
                     </motion.div>
 
                     <div className="relative z-10 w-full max-w-7xl mx-auto">
                         <motion.h1
-                            className="text-[clamp(3.5rem,12vw,10rem)] font-black leading-[0.85] tracking-[-0.05em] mb-12 uppercase"
+                            className="text-[clamp(2.5rem,10vw,10rem)] font-black leading-[0.85] tracking-[-0.05em] mb-8 md:mb-12 uppercase"
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         >
                             {profile.name.split(' ').map((word, i) => (
-                                <span key={i} className={`block ${i % 2 !== 0 ? 'text-neutral-500 italic' : ''}`}>
+                                <span key={word + i} className={`block ${i % 2 !== 0 ? 'text-neutral-500 italic' : ''}`}>
                                     {word}
                                 </span>
                             ))}
                         </motion.h1>
 
-                        <div className="max-w-xl mx-auto space-y-12">
+                        <div className="max-w-xl mx-auto space-y-8 md:space-y-12">
                             {profile.tagline && (
                                 <motion.p
-                                    className="text-lg lg:text-xl text-neutral-400 font-medium tracking-tight leading-relaxed max-w-lg mx-auto uppercase tracking-widest"
+                                    className="text-sm md:text-lg lg:text-xl text-neutral-400 font-medium tracking-tight leading-relaxed max-w-xs md:max-w-lg mx-auto uppercase tracking-widest"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 1, delay: 0.5 }}
@@ -118,31 +118,30 @@ export function MonolithTemplate({ data }: TemplateProps) {
                             )}
 
                             <motion.div
-                                className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                                className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 1, delay: 0.7 }}
                             >
                                 <a
                                     href="#contact"
-                                    className="group relative px-12 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                                    className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 rounded-full font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
                                     style={{ backgroundColor: 'var(--accent)', color: accentColor === '#FFFFFF' ? '#000000' : '#FFFFFF' }}
                                 >
-                                    <span className="relative z-10 flex items-center gap-3">
+                                    <span className="relative z-10 flex items-center justify-center gap-3">
                                         Let's Collaborate <ExternalLink className="w-3 h-3" />
                                     </span>
                                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                                 </a>
                                 <a
                                     href="#projects"
-                                    className="px-12 py-6 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-sm font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white/5 hover:border-white/20 transition-all shadow-xl"
+                                    className="w-full sm:w-auto px-8 md:px-12 py-5 md:py-6 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-sm font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] hover:bg-white/5 hover:border-white/20 transition-all shadow-xl"
                                 >
                                     Explore Works
                                 </a>
                             </motion.div>
                         </div>
                     </div>
-
                 </section>
 
                 {/* Experience Section */}
@@ -157,7 +156,7 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                 {experience.map((exp, index) => (
                                     <motion.div
                                         key={exp.id}
-                                        className="relative pl-8 border-l border-white/10"
+                                        className="relative pl-6 md:pl-8 border-l border-white/10"
                                         initial={{ opacity: 0, x: -20 }}
                                         whileInView={{ opacity: 1, x: 0 }}
                                         viewport={{ once: true }}
@@ -192,7 +191,7 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                 {projects.map((project, index) => (
                                     <motion.div
                                         key={project.id}
-                                        className="group relative flex flex-col md:flex-row items-center gap-8 p-8 md:p-12 rounded-[100px] bg-white/[0.02] border border-white/[0.05] hover:border-[var(--accent)]/30 hover:bg-white/[0.04] transition-all duration-500"
+                                        className="group relative flex flex-col lg:flex-row items-center gap-6 md:gap-8 p-6 md:p-12 rounded-[32px] md:rounded-[100px] bg-white/[0.02] border border-white/[0.05] hover:border-[var(--accent)]/30 hover:bg-white/[0.04] transition-all duration-500"
                                         initial={{ opacity: 0, y: 30 }}
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
@@ -206,7 +205,7 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                                     </span>
                                                 ))}
                                             </div>
-                                            <h4 className="text-3xl md:text-5xl font-black tracking-tighter mb-4 group-hover:text-[var(--accent)] transition-colors">
+                                            <h4 className="text-2xl md:text-5xl font-black tracking-tighter mb-4 group-hover:text-[var(--accent)] transition-colors">
                                                 {project.title}
                                             </h4>
                                             {project.description && (
@@ -216,15 +215,15 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                             )}
                                         </div>
 
-                                        <div className="flex gap-4 shrink-0">
+                                        <div className="flex gap-4 shrink-0 md:mt-4 lg:mt-0">
                                             {project.github_url && (
-                                                <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl">
-                                                    <Github className="w-6 h-6" />
+                                                <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl">
+                                                    <Github className="w-5 h-5 md:w-6 md:h-6" />
                                                 </a>
                                             )}
                                             {project.live_url && (
-                                                <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="w-16 h-16 rounded-full bg-[var(--accent)] text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl" style={{ backgroundColor: 'var(--accent)', color: accentColor === '#FFFFFF' ? '#000000' : '#FFFFFF' }}>
-                                                    <ExternalLink className="w-6 h-6" />
+                                                <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[var(--accent)] text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl" style={{ backgroundColor: 'var(--accent)', color: accentColor === '#FFFFFF' ? '#000000' : '#FFFFFF' }}>
+                                                    <ExternalLink className="w-5 h-5 md:w-6 md:h-6" />
                                                 </a>
                                             )}
                                         </div>
@@ -243,9 +242,9 @@ export function MonolithTemplate({ data }: TemplateProps) {
                                 <h2 className="text-[var(--accent)] text-[10px] font-black uppercase tracking-[0.4em] mb-4">Arsenal</h2>
                                 <h3 className="text-4xl font-bold tracking-tight">Technologies & Tools</h3>
                             </div>
-                            <div className="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                                 {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-                                    <div key={category} className="p-10 rounded-[40px] bg-white/[0.02] border border-white/5 relative overflow-hidden group">
+                                    <div key={category} className="p-6 md:p-10 rounded-[24px] md:rounded-[40px] bg-white/[0.02] border border-white/5 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent)]/5 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--accent)]/10 transition-colors" />
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-8">{category}</p>
                                         <div className="flex flex-wrap gap-3">
@@ -276,9 +275,9 @@ export function MonolithTemplate({ data }: TemplateProps) {
                             <div className="lg:w-2/3 grid grid-cols-1 gap-12">
                                 {education.map((edu) => (
                                     <div key={edu.id} className="group relative">
-                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                                            <h4 className="text-2xl font-bold">{edu.institution}</h4>
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 bg-white/5 px-4 py-2 rounded-full border border-white/10 shadow-sm">
+                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-4">
+                                            <h4 className="text-xl md:text-2xl font-bold">{edu.institution}</h4>
+                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-neutral-500 bg-white/5 px-4 py-2 rounded-full border border-white/10 shadow-sm">
                                                 {formatDateRange(edu.start_date, edu.end_date)}
                                             </span>
                                         </div>
@@ -303,9 +302,9 @@ export function MonolithTemplate({ data }: TemplateProps) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-6xl lg:text-[7rem] font-black tracking-tighter leading-[0.9] mb-12 uppercase flex flex-col items-center">
+                        <h2 className="text-4xl md:text-6xl lg:text-[7rem] font-black tracking-tighter leading-[0.9] mb-8 md:mb-12 uppercase flex flex-col items-center">
                             <span>Shall we</span>
-                            <span className="relative inline-block px-12 py-4 mt-2">
+                            <span className="relative inline-block px-8 md:px-12 py-3 md:py-4 mt-2">
                                 <motion.span
                                     className="absolute inset-0 bg-[var(--accent)]/30 backdrop-blur-sm"
                                     initial={{ scaleX: 0 }}
@@ -318,10 +317,10 @@ export function MonolithTemplate({ data }: TemplateProps) {
                             </span>
                         </h2>
 
-                        <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+                        <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-center">
                             <a
                                 href={`mailto:${social_links?.email || ''}`}
-                                className="group px-14 py-7 bg-white text-black rounded-full font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-4 overflow-hidden relative shadow-2xl"
+                                className="w-full md:w-auto px-10 md:px-14 py-6 md:py-7 bg-white text-black rounded-full font-black text-[10px] md:text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 overflow-hidden relative shadow-2xl"
                             >
                                 <span className="relative z-10">Send a Mission</span>
                                 <ExternalLink className="w-4 h-4 relative z-10" />

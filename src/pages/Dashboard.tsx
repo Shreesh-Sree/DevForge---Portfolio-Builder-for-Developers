@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save, Building2 } from 'lucide-react'
+import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save, Building2, Menu } from 'lucide-react'
 import Footer from '../components/Footer'
 import { usePortfolioStore } from '@/store/portfolioStore'
 import { createClient } from '@/lib/supabase'
+import type { Session } from '@supabase/supabase-js'
 import JSZip from 'jszip'
 
 // Raw imports for ZIP generation
@@ -16,7 +17,7 @@ const supabase = createClient()
 
 // ==================== COMPONENTS ====================
 
-function SampleCard({ title, subtitle, icon: Icon }: { title: string, subtitle: string, icon: any }) {
+function SampleCard({ title, subtitle, icon: Icon }: { title: string, subtitle: string, icon: React.ElementType }) {
     return (
         <div className="p-5 border border-dashed border-forge-muted/30 rounded-3xl text-sm flex justify-between items-center opacity-70 bg-forge-grey/30 hover:bg-forge-grey/50 transition-all group">
             <div className="flex items-center gap-4">
@@ -41,7 +42,7 @@ function Modal({ isOpen, onClose, title, children }: { isOpen: boolean, onClose:
     if (!isOpen) return null
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-[#1B2129] border border-forge-muted/20 w-full max-w-md rounded-[32px] p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="bg-[#1B2129] border border-forge-muted/20 w-full max-w-md rounded-[32px] p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-white uppercase tracking-tight">{title}</h2>
                     <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ChevronDown className="w-5 h-5 text-forge-muted" /></button>
@@ -57,7 +58,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, title, message }: { isOpen: 
     if (!isOpen) return null
     return (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-[#1B2129] border border-forge-muted/20 w-full max-w-sm rounded-[32px] p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="bg-[#1B2129] border border-forge-muted/20 w-full max-w-sm rounded-[32px] p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200">
                 <h2 className="text-xl font-bold text-white uppercase tracking-tight mb-2">{title}</h2>
                 <p className="text-sm text-forge-muted font-medium leading-relaxed mb-8">{message}</p>
                 <div className="flex gap-4">
@@ -86,12 +87,12 @@ export default function Dashboard() {
         reset
     } = usePortfolioStore()
 
-    const [activeTab, setActiveTab] = useState('overview')
-
 
     // Local UI states (sync with store when data loads)
     const [fullName, setFullName] = useState('')
     const [about, setAbout] = useState('')
+    const [activeTab, setActiveTab] = useState('overview')
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [location, setLocation] = useState('')
     const [saving, setSaving] = useState(false)
 
@@ -108,6 +109,7 @@ export default function Dashboard() {
 
     // Modal State
     const [modalType, setModalType] = useState<'experience' | 'education' | 'skills' | 'projects' | null>(null)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [modalData, setModalData] = useState<any>({})
 
     // Deployment Action States
@@ -373,8 +375,8 @@ export default App`)
             URL.revokeObjectURL(url)
 
             setToast({ message: 'Source code ZIP downloaded successfully!', type: 'success' })
-        } catch (error: any) {
-            console.error('ZIP Generation failed:', error)
+        } catch (err) {
+            console.error('ZIP Generation failed:', err)
             setToast({ message: 'Download failed. Please try again.', type: 'error' })
         } finally {
             setActionLoading(null)
@@ -382,7 +384,7 @@ export default App`)
     }
 
     // Help with GitHub authentication context
-    async function getGithubContext(): Promise<{ session: any, providerToken: string, githubUser: string } | { error: string }> {
+    async function getGithubContext(): Promise<{ session: Session, providerToken: string, githubUser: string } | { error: string }> {
         const { data: { session } } = await supabase.auth.getSession()
         const providerToken = session?.provider_token
 
@@ -483,7 +485,8 @@ export default App`)
             }
 
             setToast({ message: 'Repository updated with latest portfolio data!', type: 'success' })
-        } catch (error: any) {
+        } catch (err) {
+            const error = err as Error;
             console.error('Update failed:', error)
             setToast({ message: `Update failed: ${error.message}`, type: 'error' })
         } finally {
@@ -533,7 +536,8 @@ export default App`)
                         const err = await response.json()
                         throw new Error(err.message || 'Failed to delete repository')
                     }
-                } catch (error: any) {
+                } catch (err) {
+                    const error = err as Error;
                     console.error('Delete failed:', error)
                     setToast({ message: `Error: ${error.message}`, type: 'error' })
                 } finally {
@@ -569,7 +573,8 @@ export default App`)
             setToast({ message: 'Repository linked successfully!', type: 'success' })
             setShowConnectInput(false)
             setConnectUrl('')
-        } catch (e) {
+        } catch (err) {
+            console.error('Parse repository URL error:', err)
             setToast({ message: 'Could not parse repository URL.', type: 'error' })
         } finally {
             setActionLoading(null)
@@ -618,9 +623,10 @@ export default App`)
             await updateProfile({ custom_domain: data.html_url })
 
             setToast({ message: `'${repoName}' created and linked successfully!`, type: 'success' })
-        } catch (error: any) {
+        } catch (err: unknown) {
+            const error = err as { message?: string }
             console.error('Create failed:', error)
-            setToast({ message: `Failed to create repository: ${error.message}`, type: 'error' })
+            setToast({ message: `Failed to create repository: ${error.message || 'Unknown error'}`, type: 'error' })
         } finally {
             setActionLoading(null)
         }
@@ -629,13 +635,16 @@ export default App`)
     useEffect(() => {
         async function loadData() {
             const { data: { user } } = await supabase.auth.getUser()
+            const isDevBypass = import.meta.env.DEV && localStorage.getItem('dev_auth_bypass') === 'true'
 
-            if (!user) {
+            if (!user && !isDevBypass) {
                 navigate('/')
                 return
             }
 
-            await fetchPortfolio(user.id)
+            // If bypass is active and there's no user, use a fixed dummy ID for dev
+            const userId = user?.id || '00000000-0000-0000-0000-000000000001'
+            await fetchPortfolio(userId)
         }
 
         loadData()
@@ -651,7 +660,8 @@ export default App`)
                 tagline: location // Mapping location to tagline for now based on types
             })
             setToast({ message: 'Profile saved successfully!', type: 'success' })
-        } catch (error) {
+        } catch (err) {
+            console.error('Save profile error:', err)
             setToast({ message: 'Error saving profile.', type: 'error' })
         } finally {
             setSaving(false)
@@ -735,8 +745,9 @@ export default App`)
             setToast({ message: 'Item added successfully!', type: 'success' })
             setModalType(null)
             setModalData({})
-        } catch (error) {
-            setToast({ message: 'Failed to add item.', type: 'error' })
+        } catch (err) {
+            console.error('Handle save settings error:', err)
+            setToast({ message: 'Failed to save settings.', type: 'error' })
         } finally {
             setSaving(false)
         }
@@ -753,7 +764,8 @@ export default App`)
                     if (type === 'education') await usePortfolioStore.getState().deleteEducation(id)
                     if (type === 'skills') await usePortfolioStore.getState().deleteSkill(id)
                     setToast({ message: 'Item deleted.', type: 'info' })
-                } catch (error) {
+                } catch (err) {
+                    console.error('Delete item error:', err)
                     setToast({ message: 'Failed to delete.', type: 'error' })
                 }
             }
@@ -776,9 +788,51 @@ export default App`)
 
     return (
         <div className="min-h-screen bg-forge-black text-forge-beige font-sans pb-40 selection:bg-forge-muted selection:text-white">
-            <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-8">
-                {/* Stylish Sidebar */}
-                <nav className="w-full md:w-48 flex flex-row md:flex-col gap-1.5 overflow-x-auto md:overflow-visible pb-4 md:pb-0">
+            <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-10 flex flex-col md:flex-row gap-6 md:gap-8">
+                {/* Mobile Tab Selector Trigger */}
+                <div className="md:hidden sticky top-0 z-40 bg-forge-black pb-4">
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="w-full flex items-center justify-between p-4 bg-forge-grey border border-forge-muted/20 rounded-2xl shadow-lg"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="p-2.5 bg-forge-black rounded-xl">
+                                <Menu className="w-5 h-5 text-forge-beige" />
+                            </div>
+                            <span className="font-bold text-white uppercase tracking-[0.2em] text-xs">
+                                {tabs.find(t => t.id === activeTab)?.label}
+                            </span>
+                        </div>
+                        <ChevronDown className={`w-5 h-5 text-forge-muted transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Mobile Dropdown Overly/Menu */}
+                    {isMenuOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-2 p-3 bg-forge-grey border border-forge-muted/20 rounded-[24px] shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className="grid grid-cols-2 gap-2">
+                                {tabs.map(tab => {
+                                    const isActive = activeTab === tab.id
+                                    return (
+                                        <button
+                                            key={tab.id}
+                                            onClick={() => { setActiveTab(tab.id); setIsMenuOpen(false) }}
+                                            className={`flex items-center gap-3 p-3 rounded-xl text-xs font-bold transition-all ${isActive
+                                                ? 'bg-forge-black text-white'
+                                                : 'text-forge-muted hover:text-white hover:bg-forge-black/30'
+                                                }`}
+                                        >
+                                            <tab.icon className={`w-3.5 h-3.5 ${isActive ? 'text-forge-beige' : 'text-forge-muted'}`} />
+                                            {tab.label}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Desktop Stylish Sidebar */}
+                <nav className="hidden md:flex w-48 flex-col gap-1.5 no-scrollbar">
                     {tabs.map(tab => {
                         const isActive = activeTab === tab.id
                         return (
@@ -804,13 +858,13 @@ export default App`)
                     {activeTab === 'overview' && (
                         <div className="space-y-6 text-left">
                             <div className="flex justify-between items-center">
-                                <h1 className="text-xl font-bold uppercase tracking-tighter text-white">Your Sites</h1>
+                                <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Your Sites</h1>
                                 <div className="flex gap-2">
-                                    <a href={`/preview/${profile?.template_id || 'monolith'}`} target="_blank" className="text-[11px] font-black uppercase tracking-widest bg-forge-grey border border-forge-muted/30 text-white px-4 py-2 rounded-full hover:bg-forge-muted/20 transition-colors">Preview</a>
-                                    <button className="text-[11px] font-black uppercase tracking-widest bg-forge-beige text-forge-black px-4 py-2 rounded-full hover:bg-white transition-colors">Build New</button>
+                                    <a href={`/preview/${profile?.template_id || 'monolith'}`} target="_blank" className="text-[10px] md:text-[11px] font-black uppercase tracking-widest bg-forge-grey border border-forge-muted/30 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-forge-muted/20 transition-colors">Preview</a>
+                                    <button className="text-[10px] md:text-[11px] font-black uppercase tracking-widest bg-forge-beige text-forge-black px-3 md:px-4 py-1.5 md:py-2 rounded-full hover:bg-white transition-colors">Build New</button>
                                 </div>
                             </div>
-                            <div className="grid sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {projects.map(p => (
                                     <div key={p.id} className="p-5 border border-forge-muted/20 bg-forge-grey/20 rounded-[28px] hover:bg-forge-grey/40 flex justify-between items-center group transition-all">
                                         <div>
@@ -828,12 +882,12 @@ export default App`)
                     {activeTab === 'projects' && (
                         <div className="space-y-6 text-left">
                             <div className="flex justify-between items-center">
-                                <h1 className="text-xl font-bold uppercase tracking-tighter text-white">Your Projects</h1>
-                                <button onClick={() => setModalType('projects')} className="bg-forge-beige text-forge-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-white transition-all shadow-lg flex items-center gap-2">
+                                <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Your Projects</h1>
+                                <button onClick={() => setModalType('projects')} className="bg-forge-beige text-forge-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-white transition-all shadow-lg flex items-center gap-2">
                                     <Plus className="w-4 h-4" /> Add Project
                                 </button>
                             </div>
-                            <div className="grid sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {projects.map(p => (
                                     <div key={p.id} className="p-6 border border-forge-muted/20 bg-forge-grey/20 rounded-[32px] hover:bg-forge-grey/40 group transition-all">
                                         <div className="flex justify-between items-start mb-4">
@@ -967,10 +1021,10 @@ export default App`)
 
                     {activeTab === 'templates' && (
                         <div className="space-y-8 text-left">
-                            <h1 className="text-xl font-bold uppercase tracking-tighter text-white">Themes</h1>
-                            <div className="grid grid-cols-2 gap-4">
+                            <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Themes</h1>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {['Terminal', 'Monolith'].map(t => (
-                                    <div key={t} onClick={() => updateProfile({ template_id: t.toLowerCase() as any })} className={`p-8 border rounded-[32px] cursor-pointer transition-all ${profile?.template_id?.toLowerCase() === t.toLowerCase() ? 'bg-forge-beige text-forge-black shadow-lg shadow-black/20' : 'border-forge-muted/20 bg-forge-grey/20 text-white hover:bg-forge-grey/40'}`}>
+                                    <div key={t} onClick={() => updateProfile({ template_id: t.toLowerCase() as 'terminal' | 'monolith' })} className={`p-8 border rounded-[32px] cursor-pointer transition-all ${profile?.template_id?.toLowerCase() === t.toLowerCase() ? 'bg-forge-beige text-forge-black shadow-lg shadow-black/20' : 'border-forge-muted/20 bg-forge-grey/20 text-white hover:bg-forge-grey/40'}`}>
                                         <p className="text-sm font-black uppercase tracking-widest">{t}</p>
                                     </div>
                                 ))}
@@ -981,13 +1035,13 @@ export default App`)
                     {activeTab === 'deploy' && (
                         <div className="space-y-12 text-left">
                             <div className="flex justify-between items-center">
-                                <h1 className="text-xl font-bold uppercase tracking-tighter text-white">Share</h1>
-                                <span className="text-[10px] font-black uppercase text-forge-muted tracking-widest px-4 py-1.5 border border-forge-muted/20 rounded-full bg-forge-black/20">Status: Ready</span>
+                                <h1 className="text-lg md:text-xl font-bold uppercase tracking-tighter text-white">Share</h1>
+                                <span className="text-[9px] md:text-[10px] font-black uppercase text-forge-muted tracking-widest px-3 md:px-4 py-1 md:py-1.5 border border-forge-muted/20 rounded-full bg-forge-black/20">Status: Ready</span>
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                                 {/* Download Source Code Card */}
-                                <div className="p-10 border border-forge-muted/10 bg-forge-grey/20 rounded-[48px] flex flex-col justify-between space-y-10 group transition-all hover:bg-forge-grey/30">
+                                <div className="p-6 md:p-10 border border-forge-muted/10 bg-forge-grey/20 rounded-[32px] md:rounded-[48px] flex flex-col justify-between space-y-8 md:space-y-10 group transition-all hover:bg-forge-grey/30">
                                     <div className="flex items-start gap-6">
                                         <div className="w-16 h-16 shrink-0 bg-forge-grey/50 border border-forge-muted/10 flex items-center justify-center shadow-2xl shadow-black/40 group-hover:scale-105 transition-transform">
                                             <Download className="w-8 h-8 text-forge-beige" />
@@ -1012,7 +1066,7 @@ export default App`)
                                 </div>
 
                                 {/* GitHub Repository Card */}
-                                <div className="p-10 border border-forge-muted/10 bg-forge-grey/20 rounded-[48px] flex flex-col justify-between space-y-10 group transition-all hover:bg-forge-grey/30">
+                                <div className="p-6 md:p-10 border border-forge-muted/10 bg-forge-grey/20 rounded-[32px] md:rounded-[48px] flex flex-col justify-between space-y-8 md:space-y-10 group transition-all hover:bg-forge-grey/30">
                                     {repoData ? (
                                         <>
                                             <div className="flex justify-between items-start">
@@ -1150,7 +1204,7 @@ export default App`)
                                     {/* Portfolio Customization */}
                                     <div className="space-y-6">
                                         <h2 className="text-[10px] font-black uppercase text-forge-muted tracking-widest px-2">Portfolio Customization</h2>
-                                        <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <label className="text-[10px] font-black text-forge-muted uppercase tracking-widest pl-2">Portfolio URL Slug</label>
                                                 <div className="relative group">
@@ -1189,7 +1243,7 @@ export default App`)
                                 {/* Social Links Section */}
                                 <div className="space-y-6">
                                     <h2 className="text-[10px] font-black uppercase text-forge-muted tracking-widest px-2">Social Connections</h2>
-                                    <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {[
                                             { id: 'github', label: 'GitHub', icon: Github, placeholder: 'github.com/username' },
                                             { id: 'linkedin', label: 'LinkedIn', icon: Linkedin, placeholder: 'linkedin.com/in/username' },
@@ -1202,7 +1256,7 @@ export default App`)
                                                     <social.icon className="w-4 h-4 text-forge-muted group-focus-within:text-forge-beige" />
                                                 </div>
                                                 <input
-                                                    value={(socials as any)[social.id] || ''}
+                                                    value={(socials as Record<string, string>)[social.id] || ''}
                                                     onChange={e => setSocials({ ...socials, [social.id]: e.target.value })}
                                                     className="w-full pl-16 pr-4 py-4 bg-forge-grey/20 border border-forge-muted/10 focus:border-forge-muted focus:bg-forge-grey/40 outline-none text-sm font-bold text-white rounded-3xl transition-all"
                                                     placeholder={social.placeholder}
@@ -1245,15 +1299,15 @@ export default App`)
             <Footer />
 
             {/* Floating Bottom Navbar */}
-            <div className="fixed bottom-8 inset-x-0 z-50 px-6">
-                <nav className="max-w-5xl mx-auto px-10 py-5 flex justify-between items-center bg-forge-grey/90 backdrop-blur-md border border-forge-muted/20 rounded-[32px] shadow-2xl shadow-black/50 transition-all">
-                    <Link to="/" className="text-xl font-bold flex items-center gap-2 text-white">
-                        <div className="w-8 h-8 bg-forge-beige text-forge-black flex items-center justify-center rounded">/</div>
-                        DevForge
+            <div className="fixed bottom-6 md:bottom-8 inset-x-0 z-50 px-4 md:px-6">
+                <nav className="max-w-5xl mx-auto px-6 md:px-10 py-4 md:py-5 flex justify-between items-center bg-forge-grey/90 backdrop-blur-md border border-forge-muted/20 rounded-full md:rounded-[32px] shadow-2xl shadow-black/50 transition-all">
+                    <Link to="/" className="text-lg md:text-xl font-bold flex items-center gap-2 text-white">
+                        <div className="w-6 h-6 md:w-8 md:h-8 bg-forge-beige text-forge-black flex items-center justify-center rounded">/</div>
+                        <span className="hidden sm:inline">DevForge</span>
                     </Link>
-                    <div className="flex items-center gap-8">
-                        <Link to="/dashboard" className="text-xs font-black uppercase tracking-widest text-forge-muted hover:text-white transition-colors">Dashboard</Link>
-                        <button onClick={() => { supabase.auth.signOut(); navigate('/') }} className="bg-forge-beige text-forge-black px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-white transition-all shadow-lg">Logout</button>
+                    <div className="flex items-center gap-4 md:gap-8">
+                        <Link to="/dashboard" className="text-[10px] md:text-xs font-black uppercase tracking-widest text-forge-muted hover:text-white transition-colors">Dashboard</Link>
+                        <button onClick={() => { supabase.auth.signOut(); navigate('/') }} className="bg-forge-beige text-forge-black px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-white transition-all shadow-lg">Logout</button>
                     </div>
                 </nav>
             </div>

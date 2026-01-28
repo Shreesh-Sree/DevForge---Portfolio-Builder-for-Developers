@@ -32,6 +32,9 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  const isDevBypass = import.meta.env.DEV && localStorage.getItem('dev_auth_bypass') === 'true'
+  const isAuthenticated = !!user || isDevBypass
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-forge-black">
@@ -46,19 +49,19 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route
           path="/login"
-          element={user ? <Navigate to="/dashboard" /> : <Auth />}
+          element={isAuthenticated ? <Navigate to="/dashboard" /> : <Auth />}
         />
         <Route
           path="/signup"
-          element={user ? <Navigate to="/dashboard" /> : <Auth />}
+          element={isAuthenticated ? <Navigate to="/dashboard" /> : <Auth />}
         />
         <Route
           path="/auth"
-          element={user ? <Navigate to="/dashboard" /> : <Auth />}
+          element={isAuthenticated ? <Navigate to="/dashboard" /> : <Auth />}
         />
         <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/auth" />}
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/auth" />}
         />
         <Route path="/preview/:templateId" element={<Preview />} />
         <Route path="/:username" element={<PublicPortfolio />} />

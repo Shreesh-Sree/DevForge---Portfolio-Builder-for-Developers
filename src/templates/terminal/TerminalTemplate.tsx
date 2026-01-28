@@ -91,12 +91,14 @@ function SkillBar({ name, level }: { name: string; level: string }) {
     const emptyBlocks = 10 - filledBlocks
 
     return (
-        <div className="flex items-center gap-4 font-mono text-sm">
-            <span className="w-32 text-gray-400">{name}</span>
-            <span style={{ color: 'var(--accent)' }}>
-                [{'█'.repeat(filledBlocks)}{'░'.repeat(emptyBlocks)}]
-            </span>
-            <span className="text-amber-400">{percentage}%</span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 font-mono text-sm">
+            <span className="w-full sm:w-32 text-gray-400">{name}</span>
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+                <span style={{ color: 'var(--accent)' }} className="whitespace-nowrap">
+                    [{'█'.repeat(filledBlocks)}{'░'.repeat(emptyBlocks)}]
+                </span>
+                <span className="text-amber-400 shrink-0">{percentage}%</span>
+            </div>
         </div>
     )
 }
@@ -128,7 +130,7 @@ export function TerminalTemplate({ data }: TemplateProps) {
                 fontFamily: "'Fira Code', 'Courier New', monospace",
                 color: 'var(--accent)',
                 '--accent': accentColor
-            } as any}
+            } as React.CSSProperties}
         >
             {/* Scanline effect */}
             <div
@@ -157,9 +159,9 @@ export function TerminalTemplate({ data }: TemplateProps) {
                 </div>
 
                 {/* Terminal content */}
-                <div className="bg-black/90 border-x border-b border-neutral-700 rounded-b-lg p-6 md:p-8 min-h-[90vh]">
+                <div className="bg-black/90 border-x border-b border-neutral-700 rounded-b-lg p-5 md:p-8 min-h-[90vh]">
                     {/* ASCII art header */}
-                    <pre className="text-xs md:text-sm mb-8 overflow-x-auto" style={{ color: 'var(--accent)' }}>
+                    <pre className="text-[6px] xs:text-[8px] sm:text-xs md:text-sm mb-8 overflow-x-hidden leading-tight whitespace-pre" style={{ color: 'var(--accent)' }}>
                         {`
  ____             _____                      
 |  _ \\  _____   _|  ___|__  _ __ __ _  ___ 
@@ -171,9 +173,9 @@ export function TerminalTemplate({ data }: TemplateProps) {
                     </pre>
 
                     {/* Welcome message */}
-                    <div className="mb-8">
+                    <div className="mb-8 text-xs md:text-sm">
                         <span className="text-amber-400">→</span>
-                        <span className="ml-2">{nameText}</span>
+                        <span className="ml-2 leading-relaxed">{nameText}</span>
                         {!nameComplete && <BlinkingCursor />}
                     </div>
 
@@ -193,55 +195,21 @@ export function TerminalTemplate({ data }: TemplateProps) {
 
                     {/* Contact info */}
                     <CommandLine command="cat contact.txt" delay={2000}>
-                        <div className="grid gap-2 text-sm">
-                            {social_links?.email && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">EMAIL:</span>
-                                    <a href={`mailto:${social_links.email}`} className="text-blue-400 hover:underline">
-                                        {social_links.email}
+                        <div className="grid gap-3 text-[10px] md:text-sm">
+                            {[
+                                { label: 'EMAIL', value: social_links?.email, href: `mailto:${social_links?.email}` },
+                                { label: 'GITHUB', value: social_links?.github, href: social_links?.github },
+                                { label: 'LINKEDIN', value: social_links?.linkedin, href: social_links?.linkedin },
+                                { label: 'INSTAGRAM', value: social_links?.twitter, href: social_links?.twitter },
+                                { label: 'WEBSITE', value: social_links?.website, href: social_links?.website },
+                            ].filter(s => s.value).map((social) => (
+                                <div key={social.label} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 overflow-hidden">
+                                    <span className="text-gray-500 shrink-0">{social.label}:</span>
+                                    <a href={social.href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline truncate">
+                                        {social.value}
                                     </a>
                                 </div>
-                            )}
-                            {social_links?.github && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">GITHUB:</span>
-                                    <a href={social_links.github} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                                        {social_links.github}
-                                    </a>
-                                </div>
-                            )}
-                            {social_links?.linkedin && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">LINKEDIN:</span>
-                                    <a href={social_links.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                                        {social_links.linkedin}
-                                    </a>
-                                </div>
-                            )}
-                            {social_links?.twitter && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">INSTAGRAM:</span>
-                                    <a href={social_links.twitter} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                                        {social_links.twitter}
-                                    </a>
-                                </div>
-                            )}
-                            {social_links?.email && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">EMAIL:</span>
-                                    <a href={`mailto:${social_links.email}`} className="text-blue-400 hover:underline">
-                                        {social_links.email}
-                                    </a>
-                                </div>
-                            )}
-                            {social_links?.website && (
-                                <div className="flex items-center gap-4">
-                                    <span className="text-gray-500">WEBSITE:</span>
-                                    <a href={social_links.website} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-                                        {social_links.website}
-                                    </a>
-                                </div>
-                            )}
+                            ))}
                         </div>
                     </CommandLine>
 
@@ -255,9 +223,9 @@ export function TerminalTemplate({ data }: TemplateProps) {
                                             <span className="text-neutral-500">drwxr-xr-x</span>
                                             <span className="text-amber-400">{exp.company}/</span>
                                         </div>
-                                        <div className="mt-2">
-                                            <span className="text-green-300">{exp.position}</span>
-                                            <span className="text-neutral-500 ml-4">
+                                        <div className="mt-2 text-xs md:text-sm">
+                                            <span className="text-green-300 block sm:inline">{exp.position}</span>
+                                            <span className="text-neutral-500 sm:ml-4 block sm:inline mt-1 sm:mt-0">
                                                 {formatDateRange(exp.start_date, exp.end_date, exp.is_current)}
                                             </span>
                                         </div>

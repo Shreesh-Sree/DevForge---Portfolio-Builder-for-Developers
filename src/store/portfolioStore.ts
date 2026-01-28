@@ -102,7 +102,8 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
                 selectedTemplate: profileRes.data?.template_id || 'monolith',
                 isLoading: false,
             })
-        } catch (error) {
+        } catch (err) {
+            console.error('Fetch portfolio error:', err)
             set({ error: 'Failed to fetch portfolio data', isLoading: false })
         }
     },

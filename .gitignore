@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Cypress
+cypress/screenshots
+cypress/videos
+cypress/downloads
+
+# Environment
+.env
+.env.*
+!.env.example
+/home/shreesh/devforge-app/devforge-simple/cypress
