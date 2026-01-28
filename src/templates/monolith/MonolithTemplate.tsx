@@ -29,7 +29,7 @@ export function MonolithTemplate({ data }: TemplateProps) {
     ].filter(item => item.show !== false)
 
     return (
-        <div className="min-h-screen bg-[#030303] text-white selection:bg-[var(--accent)] selection:text-black font-sans antialiased overflow-x-hidden" style={{ '--accent': accentColor } as React.CSSProperties}>
+        <div className="min-h-screen bg-[#030303] text-white selection:bg-[var(--accent)] selection:text-black font-sans antialiased overflow-x-hidden no-scrollbar" style={{ '--accent': accentColor } as React.CSSProperties}>
             {/* Top Navigation - Minimalist Glass */}
             <div className="fixed top-0 inset-x-0 z-50 flex justify-center p-4 md:p-6">
                 <nav className="bg-black/20 backdrop-blur-md border border-white/5 px-6 md:px-8 py-2.5 md:py-3 rounded-full flex items-center gap-4 md:gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.5)] max-w-[95vw] overflow-x-auto no-scrollbar">

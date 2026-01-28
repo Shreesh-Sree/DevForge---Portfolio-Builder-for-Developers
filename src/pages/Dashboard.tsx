@@ -1054,9 +1054,10 @@ export default App`)
                                             <div className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500 group-hover:opacity-0 bg-black/20" />
                                             <iframe
                                                 src={`/preview/${t.id}`}
-                                                className="absolute top-0 left-0 w-[400%] h-[400%] border-none origin-top-left pointer-events-none"
+                                                className="absolute top-0 left-0 w-[400%] h-[400%] border-none origin-top-left pointer-events-none no-scrollbar"
                                                 style={{ transform: 'scale(0.25)' }}
                                                 title={`${t.name} Preview`}
+                                                scrolling="no"
                                             />
                                         </div>
 

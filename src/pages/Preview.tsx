@@ -202,5 +202,9 @@ export default function PreviewPage() {
         }
     }
 
-    return <TemplateComponent data={previewData} />
+    return (
+        <div className="min-h-screen overflow-hidden no-scrollbar">
+            <TemplateComponent data={previewData} />
+        </div>
+    )
 }
