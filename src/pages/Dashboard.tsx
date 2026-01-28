@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save, Building2, Menu } from 'lucide-react'
+import { Layout, Plus, ExternalLink, Settings, UserCircle, Paintbrush, Loader2, Briefcase, GraduationCap, Code as CodeIcon, Rocket, Trash2, ChevronDown, Download, Github, CheckCircle, Linkedin, Instagram, Globe, Mail, Save, Building2, Menu, Cloud } from 'lucide-react'
 import Footer from '../components/Footer'
 import { usePortfolioStore } from '@/store/portfolioStore'
 import { createClient } from '@/lib/supabase'
@@ -118,6 +118,7 @@ export default function Dashboard() {
     const [repoData, setRepoData] = useState<{ name: string, url: string } | null>(null)
     const [showConnectInput, setShowConnectInput] = useState(false)
     const [connectUrl, setConnectUrl] = useState('')
+    const [deployPlatform, setDeployPlatform] = useState<'vercel' | 'netlify' | 'github'>('vercel')
 
     // Load repo data from profile (persisted in custom_domain field)
     useEffect(() => {
@@ -1229,11 +1230,122 @@ export default App`)
                                 </div>
                             </div>
 
-                            <div className="pt-8 border-t border-forge-muted/10">
-                                <h2 className="text-[10px] font-black uppercase text-forge-muted tracking-widest mb-6 px-2">Source Code</h2>
-                                <div className="p-6 bg-forge-grey/10 border border-forge-muted/10 rounded-3xl">
-                                    <p className="text-sm font-medium text-forge-muted leading-relaxed mb-4">You can download the source code of your portfolio to host it anywhere you want.</p>
-                                    <p className="text-xs text-forge-muted/60">Note: External hosting guides are available in the documentation.</p>
+                            <div className="pt-12 border-t border-forge-muted/10">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 px-2">
+                                    <div className="space-y-2">
+                                        <h2 className="text-2xl font-black uppercase tracking-tighter text-white/90">Launch Your Forge</h2>
+                                        <p className="text-xs font-medium text-forge-muted/80 uppercase tracking-widest">Step-by-step deployment guide</p>
+                                    </div>
+                                    <div className="flex bg-forge-black/40 p-1.5 rounded-2xl border border-forge-muted/10">
+                                        {[
+                                            { id: 'vercel', label: 'Vercel' },
+                                            { id: 'netlify', label: 'Netlify' },
+                                            { id: 'github', label: 'GitHub' }
+                                        ].map((p) => (
+                                            <button
+                                                key={p.id}
+                                                onClick={() => setDeployPlatform(p.id as any)}
+                                                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${deployPlatform === p.id ? 'bg-forge-beige text-forge-black shadow-lg' : 'text-forge-muted hover:text-white'}`}
+                                            >
+                                                {p.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {/* Deployment Steps */}
+                                    <div className="lg:col-span-2 space-y-4">
+                                        {[
+                                            {
+                                                step: "01",
+                                                title: "Source Preparation",
+                                                desc: deployPlatform === 'github'
+                                                    ? "Push your changes to your GitHub repository using the 'Update Repo' button above."
+                                                    : "Download your source code as a ZIP file or connect your GitHub repository.",
+                                                icon: Cloud
+                                            },
+                                            {
+                                                step: "02",
+                                                title: "Project Setup",
+                                                desc: deployPlatform === 'vercel'
+                                                    ? "Import your repository in Vercel. Choose 'Vite' as the Framework Preset."
+                                                    : deployPlatform === 'netlify'
+                                                        ? "Pick 'Import from GitHub' or 'Manual Deploy'. Choose 'Vite' as the site type."
+                                                        : "Enable 'GitHub Actions' in Settings > Pages. Choose 'GitHub Actions' as source.",
+                                                icon: Rocket
+                                            },
+                                            {
+                                                step: "03",
+                                                title: "Build Configuration",
+                                                isConfig: true,
+                                                icon: Settings
+                                            }
+                                        ].map((item, i) => (
+                                            <div key={i} className="p-6 md:p-8 bg-forge-grey/15 border border-forge-muted/10 rounded-[32px] hover:bg-forge-grey/25 transition-all group">
+                                                <div className="flex gap-6">
+                                                    <div className="shrink-0 w-12 h-12 rounded-2xl bg-forge-black border border-forge-muted/20 flex items-center justify-center text-forge-beige font-black text-xs group-hover:scale-110 transition-transform">
+                                                        <item.icon className="w-5 h-5" />
+                                                    </div>
+                                                    <div className="space-y-3">
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-[10px] font-black text-forge-beige tracking-widest opacity-60">{item.step}</span>
+                                                            <h3 className="text-lg font-bold text-white tracking-tight">{item.title}</h3>
+                                                        </div>
+                                                        {item.isConfig ? (
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                                                                <div className="p-4 bg-forge-black/60 rounded-2xl border border-forge-muted/20">
+                                                                    <p className="text-[9px] font-black text-forge-muted uppercase tracking-widest mb-1">Build Command</p>
+                                                                    <code className="text-xs font-mono text-forge-beige">npm run build</code>
+                                                                </div>
+                                                                <div className="p-4 bg-forge-black/60 rounded-2xl border border-forge-muted/20">
+                                                                    <p className="text-[9px] font-black text-forge-muted uppercase tracking-widest mb-1">Output Directory</p>
+                                                                    <code className="text-xs font-mono text-forge-beige">dist</code>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <p className="text-sm text-forge-muted leading-relaxed font-medium">{item.desc}</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Sidebar Tips */}
+                                    <div className="space-y-6">
+                                        <div className="p-8 bg-forge-beige/5 border border-forge-beige/20 rounded-[32px] space-y-6">
+                                            <div className="w-12 h-12 rounded-2xl bg-forge-beige text-forge-black flex items-center justify-center">
+                                                <Globe className="w-6 h-6" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h4 className="text-base font-black uppercase tracking-tight text-forge-beige">Pro Tip</h4>
+                                                <p className="text-xs text-forge-muted/90 leading-relaxed font-medium capitalize">
+                                                    Ensure your environment variables are correctly set on {deployPlatform} if you use custom API endpoints.
+                                                </p>
+                                            </div>
+                                            <div className="pt-4 border-t border-forge-beige/10">
+                                                <a
+                                                    href={deployPlatform === 'vercel' ? 'https://vercel.com/docs' : deployPlatform === 'netlify' ? 'https://docs.netlify.com' : 'https://docs.github.com/en/pages'}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 text-[10px] font-black text-forge-beige uppercase tracking-widest hover:text-white transition-colors"
+                                                >
+                                                    View {deployPlatform} Docs <ExternalLink className="w-3 h-3" />
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-8 bg-forge-black/40 border border-forge-muted/10 rounded-[32px] flex items-center justify-between group cursor-help">
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] font-black text-forge-muted uppercase tracking-widest">Need Help?</p>
+                                                <p className="text-xs font-bold text-white tracking-tight">Deployment Support</p>
+                                            </div>
+                                            <div className="w-8 h-8 rounded-full bg-forge-grey/50 flex items-center justify-center group-hover:bg-forge-beige group-hover:text-forge-black transition-all">
+                                                <Mail className="w-4 h-4" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
